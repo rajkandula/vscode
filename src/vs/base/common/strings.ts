@@ -193,7 +193,14 @@ export function convertSimple2RegExpPattern(pattern: string): string {
 }
 
 export function stripWildcards(pattern: string): string {
-	return pattern.replace(/\*/g, '');
+        return pattern.replace(/\*/g, '');
+}
+
+export function capitalize(str: string): string {
+        if (!str) {
+                return str;
+        }
+        return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export interface RegExpOptions {
