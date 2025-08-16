@@ -54,6 +54,28 @@ export class TelemetryService implements ITelemetryService {
 		@IProductService private _productService: IProductService
 	) {
 		this._appenders = config.appenders;
+
+		// Allow the telemetry endpoint to be customized or disabled via an
+		// environment variable. When `VSCODE_TELEMETRY_ENDPOINT` is set to
+		// `none`, all appenders are removed and no network requests are made.
+		// Otherwise, attempt to update any known appender endpoint fields.
+		const customEndpoint = (globalThis as any).process?.env?.['VSCODE_TELEMETRY_ENDPOINT'];
+		if (typeof customEndpoint === 'string') {
+			if (customEndpoint.toLowerCase() === 'none') {
+				this._appenders = [];
+			} else {
+				for (const appender of this._appenders) {
+					const anyAppender = appender as any;
+					if (typeof anyAppender.setEndpoint === 'function') {
+						try {
+							anyAppender.setEndpoint(customEndpoint);
+						} catch { /* ignore */ }
+					} else if ('endPointUrl' in anyAppender) {
+						anyAppender.endPointUrl = customEndpoint;
+					}
+				}
+			}
+		}
 		this._commonProperties = config.commonProperties ?? Object.create(null);
 
 		this.sessionId = this._commonProperties['sessionID'] as string;
