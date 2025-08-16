@@ -618,6 +618,13 @@ suite('Strings', () => {
 		assert.strictEqual(strings.removeAnsiEscapeCodesFromPrompt('\n\\[\u001b[01;34m\\]\\w\\[\u001b[00m\\]\n\\[\u001b[1;32m\\]> \\[\u001b[0m\\]'), '\n\\w\n> ');
 	});
 
+        test('capitalize', () => {
+                assert.strictEqual(strings.capitalize('foo'), 'Foo');
+                assert.strictEqual(strings.capitalize('Foo'), 'Foo');
+                assert.strictEqual(strings.capitalize(''), '');
+                assert.strictEqual(strings.capitalize('f'), 'F');
+        });
+
 	test('count', () => {
 		assert.strictEqual(strings.count('hello world', 'o'), 2);
 		assert.strictEqual(strings.count('hello world', 'l'), 3);
