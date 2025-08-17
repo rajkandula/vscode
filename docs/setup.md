@@ -17,3 +17,14 @@ yarn
 yarn watch
 yarn web
 ```
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and set your local values:
+
+```bash
+cp .env.example .env
+```
+
+Never commit real API keys or secrets. Load variables from this file with a library such as [`dotenv`](https://www.npmjs.com/package/dotenv) or your build tooling.
+
