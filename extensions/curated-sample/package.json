@@ -1,0 +1,33 @@
+{
+  "name": "curated-sample",
+  "displayName": "Curated Sample",
+  "publisher": "vscode",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "*"
+  ],
+  "extensionDependencies": [
+    "vscode.git"
+  ],
+  "contributes": {
+    "configuration": {
+      "title": "Curated Sample",
+      "properties": {
+        "curatedSample.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Curated Sample features."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "gulp compile-extension:curated-sample",
+    "watch": "gulp watch-extension:curated-sample"
+  }
+}

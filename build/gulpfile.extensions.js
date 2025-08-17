@@ -29,10 +29,11 @@ const ext = require('./lib/extensions');
 // });
 const compilations = [
 	'extensions/configuration-editing/tsconfig.json',
-	'extensions/css-language-features/client/tsconfig.json',
-	'extensions/css-language-features/server/tsconfig.json',
-	'extensions/debug-auto-launch/tsconfig.json',
-	'extensions/debug-server-ready/tsconfig.json',
+'extensions/css-language-features/client/tsconfig.json',
+'extensions/css-language-features/server/tsconfig.json',
+'extensions/curated-sample/tsconfig.json',
+'extensions/debug-auto-launch/tsconfig.json',
+'extensions/debug-server-ready/tsconfig.json',
 	'extensions/emmet/tsconfig.json',
 	'extensions/extension-editing/tsconfig.json',
 	'extensions/git/tsconfig.json',
