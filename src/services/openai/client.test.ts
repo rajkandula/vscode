@@ -35,8 +35,10 @@ test('sendChat parses streaming responses', async () => {
   const response = new Response(stream, { headers: { 'content-type': 'text/event-stream' } });
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async () => response;
-  const res = await sendChat([{ role: 'user', content: 'Hi' }]);
+  let streamed = '';
+  const res = await sendChat([{ role: 'user', content: 'Hi' }], t => streamed += t);
   assert.equal(res.content, 'Hello');
+  assert.equal(streamed, 'Hello');
   globalThis.fetch = originalFetch;
 });
 
