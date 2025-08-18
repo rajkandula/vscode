@@ -22,7 +22,10 @@ export class OpenAIError extends Error {
 const API_URL = 'https://api.openai.com/v1/chat/completions';
 const API_KEY = process.env.VITE_OPENAI_API_KEY;
 
-export async function sendChat(messages: ChatMessage[]): Promise<ChatResponse> {
+export async function sendChat(
+  messages: ChatMessage[],
+  onToken?: (token: string) => void
+): Promise<ChatResponse> {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -68,7 +71,10 @@ export async function sendChat(messages: ChatMessage[]): Promise<ChatResponse> {
             try {
               const json = JSON.parse(data);
               const delta = json.choices?.[0]?.delta?.content;
-              if (delta) message += delta;
+              if (delta) {
+                message += delta;
+                onToken?.(delta);
+              }
             } catch {
               // ignore parse errors
             }
@@ -81,7 +87,10 @@ export async function sendChat(messages: ChatMessage[]): Promise<ChatResponse> {
             try {
               const json = JSON.parse(data);
               const delta = json.choices?.[0]?.delta?.content;
-              if (delta) message += delta;
+              if (delta) {
+                message += delta;
+                onToken?.(delta);
+              }
             } catch {
               // ignore
             }
