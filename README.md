@@ -14,13 +14,13 @@ Visual Studio Code is a lightweight yet powerful source code editor built with w
 1. **Install dependencies**
 
    ```
-   yarn
+   npm install
    ```
 
 2. **Compile and watch for changes**
 
    ```
-   yarn watch
+   npm run watch
    ```
 
 3. **Launch the editor**
