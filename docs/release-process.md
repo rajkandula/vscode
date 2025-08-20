@@ -10,9 +10,9 @@ This document describes how to build and publish signed releases for VS Code.
 ## Build and Test
 The [release workflow](../.github/workflows/release.yml) runs automatically for tags and on demand. It:
 
-1. Installs dependencies with `yarn --frozen-lockfile`.
+1. Installs dependencies with `npm ci`.
 2. Runs unit tests using `npm test`.
-3. Builds the product with `yarn gulp vscode-{platform}` for:
+3. Builds the product with `npm run gulp vscode-{platform}` for:
    - `win32-x64` on Windows
    - `darwin` on macOS
    - `linux-x64` on Linux

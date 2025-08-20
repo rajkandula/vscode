@@ -3,7 +3,7 @@
 Install the following tools before working with this repository:
 
 - **Node.js 22.17.0** – specified in `.nvmrc` and required for building.
-- **Yarn** – used to manage Node.js dependencies.
+- **npm** – used to manage Node.js dependencies (bundled with Node.js).
 - **Python 3** – required for native build scripts.
 - **C/C++ build tools**
   - Linux: `gcc`, `g++`, `make`, and related packages (e.g. `build-essential`).
@@ -13,9 +13,9 @@ Install the following tools before working with this repository:
 With the prerequisites installed, install dependencies and start a development build:
 
 ```bash
-yarn
-yarn watch
-yarn web
+npm install
+npm run watch
+npm run web
 ```
 
 ## Environment Variables
