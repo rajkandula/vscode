@@ -13,6 +13,8 @@ import { IHoverService } from '../../../../platform/hover/browser/hover.js';
 import { ViewPane, IViewPaneOptions } from '../../../browser/parts/views/viewPane.js';
 import { ChatMarkdownRenderer } from './chatMarkdownRenderer.js';
 import { localize } from '../../../../nls.js';
+import { getInputBoxStyle } from '../../../../platform/theme/browser/defaultStyles.js';
+import { inputBackground, inputForeground, inputBorder } from '../../../../platform/theme/common/colorRegistry.js';
 import './media/simpleChat.css';
 
 export class SimpleChatViewPane extends ViewPane {
@@ -29,7 +31,7 @@ export class SimpleChatViewPane extends ViewPane {
                 @IViewDescriptorService viewDescriptorService: IViewDescriptorService,
                 @IInstantiationService instantiationService: IInstantiationService,
                 @IOpenerService openerService: IOpenerService,
-                @IThemeService themeService: IThemeService,
+                @IThemeService private readonly themeService: IThemeService,
                 @IHoverService hoverService: IHoverService,
                 @IContextViewService private readonly contextViewService: IContextViewService,
         ) {
@@ -43,7 +45,15 @@ export class SimpleChatViewPane extends ViewPane {
                 const messages = append(root, $('.simple-chat-messages'));
                 this.messages = messages;
                 const inputArea = append(root, $('.simple-chat-input'));
-                this.input = new InputBox(inputArea, this.contextViewService, { ariaLabel: localize('simpleChatInput', 'Chat input') });
+                this.input = new InputBox(inputArea, this.contextViewService, {
+                        ariaLabel: localize('simpleChatInput', 'Chat input'),
+                        inputBoxStyles: getInputBoxStyle({
+                                inputBackground,
+                                inputForeground,
+                                inputBorder
+                        })
+                });
+                this._register(this.themeService.onDidColorThemeChange(() => (this.input as any).applyStyles()));
                 const button = append(inputArea, $('button.simple-chat-send', undefined, localize('simpleChatSend', 'Send')));
                 button.addEventListener('click', () => this.submit());
                 this.input.inputElement.addEventListener('keydown', (e) => {
