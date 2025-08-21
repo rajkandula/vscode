@@ -4,44 +4,36 @@ title: Chat Architecture
 
 # Chat Architecture
 
-This document outlines the flow of a chat request.
+## Module Layout
+- `src/chat/ui` – renders the chat panel and input bar
+- `src/chat/services` – orchestrates requests and maintains sessions
+- `src/chat/commands` – exposes chat actions inside the editor
+- `src/services/openai` – language model client for API calls
 
-The chat flow is: editor context → API request → response rendering.
-
-## Request and Response
-
-```mermaid
-sequenceDiagram
-    participant Editor as Editor
-    participant Service as ChatService
-    participant API as LanguageModelAPI
-    participant View as ChatUI
-
-    Editor->>Service: Gather context
-    Service->>API: Send request
-    API-->>Service: Return response
-    Service-->>View: Render message
-```
-
-## Error Handling
+## Data Flow
+1. User enters a prompt in the chat UI.
+2. The UI forwards the message to `ChatService`.
+3. `ChatService` gathers editor context and constructs a request.
+4. `OpenAIClient` sends the request to the language model.
+5. The model streams a response back to `ChatService`.
+6. `ChatService` persists results and notifies the UI to render output.
 
 ```mermaid
 sequenceDiagram
-    participant Editor as Editor
-    participant Service as ChatService
-    participant API as LanguageModelAPI
-    participant View as ChatUI
+    participant User
+    participant UI
+    participant Service
+    participant API
 
-    Editor->>Service: Gather context
-    Service->>API: Send request
-    API--x Service: Error
-    Service-->>View: Display error
+    User->>UI: Type prompt
+    UI->>Service: onSubmit()
+    Service->>API: sendRequest()
+    API-->>Service: streamResponse()
+    Service-->>UI: render()
 ```
 
-## Related Services and Modules
-
+## Related Files
 - `src/vs/workbench/contrib/chat/common/chatService.ts`
 - `src/vs/workbench/contrib/chat/common/chatServiceImpl.ts`
-- `src/vs/workbench/contrib/chat/browser/chatWidget.ts`
-- `src/vs/workbench/contrib/chat/browser/chatViewPane.ts`
-
+- `src/chat/ui/panel.ts`
+- `src/services/openai/client.ts`
