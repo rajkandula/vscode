@@ -14,6 +14,9 @@ export async function* sendChat(messages: ChatMessage[]): AsyncGenerator<string>
         throw new Error('OPENAI_API_KEY is not set');
     }
 
+    console.debug('[chat] calling OpenAI with', messages.length, 'messages');
+    const start = Date.now();
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -27,6 +30,8 @@ export async function* sendChat(messages: ChatMessage[]): AsyncGenerator<string>
         })
     });
 
+    console.debug('[chat] OpenAI response status', response.status);
+
     if (!response.ok || !response.body) {
         throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
     }
@@ -34,6 +39,8 @@ export async function* sendChat(messages: ChatMessage[]): AsyncGenerator<string>
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
+    let message = '';
+    let usage: any;
     while (true) {
         const { value, done } = await reader.read();
         if (done) {
@@ -49,12 +56,23 @@ export async function* sendChat(messages: ChatMessage[]): AsyncGenerator<string>
             }
             const data = trimmed.replace(/^data:\s*/, '');
             if (data === '[DONE]') {
+                const duration = Date.now() - start;
+                if (process.env.DEBUG_CHAT === '1') {
+                    const promptTokens = estimateTokens(messages.map(m => m.content).join('\n'));
+                    const completionTokens = usage?.completion_tokens ?? estimateTokens(message);
+                    const totalTokens = usage?.total_tokens ?? promptTokens + completionTokens;
+                    console.debug(`[chat] tokens prompt=${promptTokens} completion=${completionTokens} total=${totalTokens} duration=${duration}ms`);
+                }
                 return;
             }
             try {
                 const json = JSON.parse(data);
+                if (json.usage) {
+                    usage = json.usage;
+                }
                 const text = json.choices?.[0]?.delta?.content;
                 if (text) {
+                    message += text;
                     yield text;
                 }
             } catch {
@@ -62,4 +80,8 @@ export async function* sendChat(messages: ChatMessage[]): AsyncGenerator<string>
             }
         }
     }
+}
+
+function estimateTokens(text: string): number {
+    return Math.ceil(text.length / 4);
 }
