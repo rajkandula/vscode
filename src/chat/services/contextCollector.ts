@@ -11,9 +11,12 @@ export async function collectContext(): Promise<WorkspaceContext> {
     const filePaths: string[] = [];
     const summaries: string[] = [];
 
+    console.debug('[chat] collecting context from', editors.length, 'editors');
+
     for (const editor of editors) {
         const doc = editor.document;
         filePaths.push(doc.uri.fsPath);
+        console.debug('[chat] collecting context for', doc.uri.fsPath);
         let text: string;
         if (editor.selection && !editor.selection.isEmpty) {
             text = doc.getText(editor.selection);
@@ -25,5 +28,6 @@ export async function collectContext(): Promise<WorkspaceContext> {
         summaries.push(`File: ${doc.uri.fsPath}\n${lines.join('\n')}`);
     }
 
+    console.debug('[chat] collected context for files', filePaths);
     return { filePaths, summaries };
 }

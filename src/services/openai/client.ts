@@ -27,6 +27,8 @@ export async function sendChat(
   onToken?: (token: string) => void
 ): Promise<ChatResponse> {
   try {
+    console.debug('[chat] calling OpenAI with', messages.length, 'messages');
+    const start = Date.now();
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: {
@@ -35,6 +37,8 @@ export async function sendChat(
       },
       body: JSON.stringify({ model: 'gpt-3.5-turbo', stream: true, messages }),
     });
+
+    console.debug('[chat] OpenAI response status', res.status);
 
     if (!res.ok) {
       let errData: any;
@@ -48,6 +52,7 @@ export async function sendChat(
     }
 
     const contentType = res.headers.get('content-type') || '';
+    let usage: any;
     if (contentType.includes('stream')) {
       const reader = res.body?.getReader();
       const decoder = new TextDecoder('utf-8');
@@ -66,10 +71,14 @@ export async function sendChat(
             const data = trimmed.replace(/^data:\s*/, '');
             if (data === '[DONE]') {
               reader.cancel();
+              logDebug(start, messages, message, usage);
               return { role: 'assistant', content: message };
             }
             try {
               const json = JSON.parse(data);
+              if (json.usage) {
+                usage = json.usage;
+              }
               const delta = json.choices?.[0]?.delta?.content;
               if (delta) {
                 message += delta;
@@ -97,10 +106,13 @@ export async function sendChat(
           }
         }
       }
+      logDebug(start, messages, message, usage);
       return { role: 'assistant', content: message };
     } else {
       const data = await res.json();
+      usage = data.usage;
       const message = data.choices?.[0]?.message ?? { role: 'assistant', content: '' };
+      logDebug(start, messages, message.content, usage);
       return message;
     }
   } catch (err: any) {
@@ -109,5 +121,19 @@ export async function sendChat(
     }
     throw new OpenAIError(err?.message || 'OpenAI request failed');
   }
+}
+
+function logDebug(start: number, messages: ChatMessage[], completion: string, usage?: any) {
+  if (process.env.DEBUG_CHAT === '1') {
+    const duration = Date.now() - start;
+    const promptTokens = usage?.prompt_tokens ?? estimateTokens(messages.map(m => m.content).join('\n'));
+    const completionTokens = usage?.completion_tokens ?? estimateTokens(completion);
+    const totalTokens = usage?.total_tokens ?? promptTokens + completionTokens;
+    console.debug(`[chat] tokens prompt=${promptTokens} completion=${completionTokens} total=${totalTokens} duration=${duration}ms`);
+  }
+}
+
+function estimateTokens(text: string): number {
+  return Math.ceil(text.length / 4);
 }
 
