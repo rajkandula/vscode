@@ -19,6 +19,10 @@ npm run start   # desktop
 npm run web     # browser
 ```
 
+After starting the editor, the Chat icon is now visible in the Activity Bar
+by default. Click the icon to open the chat view without using the Command
+Palette.
+
 ## Environment Variables
 
 Copy `.env.example` to `.env` and set your local values:
@@ -31,7 +35,7 @@ Never commit real API keys or secrets. Load variables from this file with a libr
 
 ## Manual Test
 
-1. Open the chat view from the Activity Bar.
+1. Click the Chat icon in the Activity Bar to open the chat view.
 2. Ask **"Summarize open file"**.
 3. Confirm the assistant returns a summary of the active file.
 4. If you encounter issues, please file an issue with logs and reproduction steps.
