@@ -1,6 +1,7 @@
 # Visual Studio Code
 
-Visual Studio Code is a lightweight yet powerful source code editor built with web technologies.
+## Overview
+Visual Studio Code is a lightweight yet powerful source code editor built with web technologies. It now includes an integrated chat bar to help you explore and modify code using natural language.
 
 ## Features
 - Syntax highlighting and IntelliSense for many languages
@@ -8,31 +9,29 @@ Visual Studio Code is a lightweight yet powerful source code editor built with w
 - Integrated Git support
 - Extensive extension marketplace
 - Customizable themes and settings
+- Built-in chat assistance
 
-## Getting Started
-
+## Setup
 1. **Install dependencies**
-
    ```
    npm install
    ```
-
 2. **Compile and watch for changes**
-
    ```
    npm run watch
    ```
-
 3. **Launch the editor**
-
    ```
    ./scripts/code.sh
    ```
 
-## Contributing
+## Chat Usage
+Use the chat bar at the bottom of the editor to ask questions, run commands, or get code suggestions.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details on our development process.
+![Chat bar screenshot](docs/chat/chat-bar.svg)
 
-## License
-
-[MIT](LICENSE.txt)
+## Future Work
+Planned enhancements include:
+- Slash commands for quick actions
+- Multi-file summarization
+- Plug-in API for custom chat providers
