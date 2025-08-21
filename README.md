@@ -21,14 +21,25 @@ Visual Studio Code is a lightweight yet powerful source code editor built with w
    npm run watch
    ```
 3. **Launch the editor**
-   ```
-   ./scripts/code.sh
-   ```
+   - Desktop:
+     ```
+     npm run start
+     ```
+   - Browser:
+     ```
+     npm run web
+     ```
 
 ## Chat Usage
 Use the chat bar at the bottom of the editor to ask questions, run commands, or get code suggestions.
 
 ![Chat bar screenshot](docs/chat/chat-bar.svg)
+
+## Manual Test
+1. Open the chat view from the Activity Bar.
+2. Ask **"Summarize open file"**.
+3. Ensure the assistant responds with a summary of the active file.
+4. If something goes wrong, please file an issue with logs and reproduction steps.
 
 ## Future Work
 Planned enhancements include:
