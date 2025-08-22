@@ -7,7 +7,6 @@ import { ViewPaneContainer } from '../../../browser/parts/views/viewPaneContaine
 import { SimpleChatViewPane } from './simpleChatView.js';
 
 export const SIMPLE_CHAT_VIEW_CONTAINER_ID = 'workbench.view.simpleChat';
-export const SIMPLE_CHAT_VIEW_ID = 'workbench.view.simpleChat.view';
 
 const viewContainer: ViewContainer = Registry.as<IViewContainersRegistry>(ViewContainerExtensions.ViewContainersRegistry).registerViewContainer({
         id: SIMPLE_CHAT_VIEW_CONTAINER_ID,
@@ -19,7 +18,7 @@ const viewContainer: ViewContainer = Registry.as<IViewContainersRegistry>(ViewCo
 
 Registry.as<IViewsRegistry>(ViewContainerExtensions.ViewsRegistry).registerViews([
         {
-                id: SIMPLE_CHAT_VIEW_ID,
+                id: SimpleChatViewPane.ID,
                 name: localize('simpleChatView', "Simple Chat"),
                 ctorDescriptor: new SyncDescriptor(SimpleChatViewPane),
                 canMoveView: true,

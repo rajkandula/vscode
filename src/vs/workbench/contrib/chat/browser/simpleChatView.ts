@@ -18,6 +18,8 @@ import { inputBackground, inputForeground, inputBorder } from '../../../../platf
 import './media/simpleChat.css';
 
 export class SimpleChatViewPane extends ViewPane {
+        static readonly ID = 'workbench.view.simpleChat.view';
+
         private messages!: HTMLElement;
         private input!: InputBox;
         private renderer: ChatMarkdownRenderer;
